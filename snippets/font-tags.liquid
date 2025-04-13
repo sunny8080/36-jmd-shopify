@@ -1,0 +1,95 @@
+{%- if settings.selected_header_font.system? == false or settings.selected_body_font.system? == false -%}
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+{%- endif -%}
+
+{%- if settings.selected_header_font.system? == false -%}
+  {{ settings.selected_header_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{%- endif -%}
+
+{%- if settings.selected_body_font.system? == false -%}
+  {{ settings.selected_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{%- endif -%}
+
+
+{% liquid
+  assign selected_header_font = settings.selected_header_font;
+  assign selected_body_font = settings.selected_body_font;
+
+  assign selected_header_font_400 = selected_header_font | font_modify: 'weight', '400' | font_face: font_display: 'swap';
+  assign selected_header_font_700 = selected_header_font | font_modify: 'weight', '700' | font_face: font_display: 'swap';
+  assign selected_header_font_800 = selected_header_font | font_modify: 'weight', '800' | font_face: font_display: 'swap';
+  assign selected_header_font_400_italic = selected_header_font | font_modify: 'weight', '400' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+  assign selected_header_font_700_italic = selected_header_font | font_modify: 'weight', '700' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+  assign selected_header_font_800_italic = selected_header_font | font_modify: 'weight', '800' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+
+  assign selected_body_font_400 = selected_body_font | font_modify: 'weight', '400' | font_face: font_display: 'swap';
+  assign selected_body_font_700 = selected_body_font | font_modify: 'weight', '700' | font_face: font_display: 'swap';
+  assign selected_body_font_800 = selected_body_font | font_modify: 'weight', '800' | font_face: font_display: 'swap';
+  assign selected_body_font_400_italic = selected_body_font | font_modify: 'weight', '400' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+  assign selected_body_font_700_italic = selected_body_font | font_modify: 'weight', '700' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+  assign selected_body_font_800_italic = selected_body_font | font_modify: 'weight', '800' | font_modify: 'style', 'italic' | font_face: font_display: 'swap';
+%}
+
+{% style %}
+  {{ selected_header_font_400 }}
+  {{ selected_header_font_700 }}
+  {{ selected_header_font_800 }}
+  {{ selected_header_font_400_italic }}
+  {{ selected_header_font_700_italic }}
+  {{ selected_header_font_800_italic }}
+
+  {{ selected_body_font_400 }}
+  {{ selected_body_font_700 }}
+  {{ selected_body_font_800 }}
+  {{ selected_body_font_400_italic }}
+  {{ selected_body_font_700_italic }}
+  {{ selected_body_font_800_italic }}
+
+  :root{
+    --font-body-family: {{ settings.selected_body_font.family }}, {{ settings.selected_body_font.fallback_families }};
+    --font-body-style: {{ settings.selected_body_font.style }};
+    --font-body-weight: {{ settings.selected_body_font.weight }};
+    --font-body-weight-bold: {{ settings.selected_body_font.weight | plus: 300 | at_most: 1000 }};
+
+    --font-heading-family: {{ settings.selected_header_font.family }}, {{ settings.selected_header_font.fallback_families }};
+    --font-heading-style: {{ settings.selected_header_font.style }};
+    --font-heading-weight: {{ settings.selected_header_font.weight }};
+
+    --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+    --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
+  }
+{% endstyle %}
+
+{% style %}
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  html {
+    box-sizing: border-box;
+    height: 100%;
+    font-size: calc(var(--font-body-scale) * 100%);
+  }
+
+  body {
+    min-height: 100%;
+    margin: 0;
+    font-size: 0.875rem;
+    /* letter-spacing: 0.0375rem; */
+    line-height: calc(1 + 0.8 / var(--font-body-scale));
+    font-family: var(--font-body-family);
+    font-style: var(--font-body-style);
+    font-weight: var(--font-body-weight);
+  }
+
+  @media screen and (min-width: 750px) {
+    body {
+      font-size: 1rem;
+    }
+  }
+{% endstyle %}
+
+
+
