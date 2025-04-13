@@ -6,7 +6,7 @@
   {{ settings.selected_header_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {%- endif -%} {% endcomment %}
 
-{%- if settings.type_body_font.system? == false -%}
+{%- if settings.selected_header_font.system? == false -%}
   {% comment %}theme-check-disable AssetPreload{% endcomment %}
   <link rel="preload" as="font" href="{{ settings.selected_header_font | font_url }}" type="font/woff2" crossorigin>
   {% comment %}theme-check-enable AssetPreload{% endcomment %}
