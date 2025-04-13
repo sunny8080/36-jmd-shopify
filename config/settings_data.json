@@ -9,7 +9,8 @@
  */
 {
   "current": {
-    "selected_header_font": "bricolage_grotesque_n8",
+    "selected_header_font": "inter_n7",
+    "selected_body_font": "inter_n4",
     "sections": {
       "header": {
         "type": "header",
