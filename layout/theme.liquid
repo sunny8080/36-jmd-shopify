@@ -42,14 +42,14 @@
       {{ 'accessibility.skip_to_text' | t }}
     </a>
 
-    {% section 'header' %}
+    {% sections 'header-group' %}
 
     <main id="MainContent" role="main">
       {{ content_for_layout }}
       <!-- Injects the template content -->
     </main>
 
-    {% section 'footer' %}
+    {% sections 'footer-group' %}
 
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>

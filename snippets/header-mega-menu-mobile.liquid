@@ -1,0 +1,134 @@
+{% comment %}
+  Renders a header mega menu for mobile devices
+
+  Usage:
+  {% render 'header-mega-menu-mobile' %}
+{% endcomment %}
+
+<link href="{{ 'header-mega-menu-mobile.scss.css' | asset_url }}" rel="stylesheet">
+
+{% if section.settings.menu %}
+  <div
+    class="mega-menu-mobile-container menu-open"
+    aria-label="Menu"
+    aria-expanded="false"
+  >
+    {% comment %} Hmaburger Icon {% endcomment %}
+    <div
+      class="jmd-hamburger"
+      role="button"
+      aria-controls="#mega-menu-mobile-wrapper"
+    >
+      <span style="width: {{ section.settings.hamburger_icon_size  }}px" class="mega-menu-icon hamburger-icon">
+        {{- 'icon-hamburger.svg' | inline_asset_content -}}
+      </span>
+      <span style="width: {{ section.settings.hamburger_icon_size  }}px" class="mega-menu-icon cross-icon">
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </span>
+    </div>
+
+    {% comment %} Mega Menu {% endcomment %}
+    <div id="mega-menu-mobile-wrapper" class="mega-menu-mobile-wrapper menu-open">
+      <nav>
+        {% comment %} Mega Menu L1 {% endcomment %}
+        <ul class="mega-menu-mobile-l1" role="menu">
+          {% for linkL1 in section.settings.menu.links %}
+            <li
+              class="
+                mega-menu-mobile-l1-item
+                {%- if linkL1.child_active or linkL1.current %}
+                    active
+                {% endif %}
+              "
+              id="mega-menu-mobile-l1-{{ forloop.index }}"
+            >
+              {% if linkL1.links == blank %}
+                <a
+                  href="{{ linkL1.url }}"
+                  id="mega-menu-mobile-l1-title-{{ linkL1.handle }}"
+                  {% if childLinkL2.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span>{{ linkL1.title | escape }}</span>
+                </a>
+              {% else %}
+                <details class="mega-menu-mobile-l1-details">
+                  <summary>
+                    <span>{{ linkL1.title | escape }}</span>
+                    <span class="caret-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                  </summary>
+
+                  {% comment %} Mega Menu L2 {% endcomment %}
+                  <div class="mega-menu-mobile-l2-wrapper">
+                    <ul
+                      class="mega-menu-mobile-l2"
+                      role="list"
+                      id="mega-menu-mobile-l1-content-{{ forloop.index }}"
+                    >
+                      {% for childLinkL2 in linkL1.links %}
+                        <li
+                          class="
+                            mega-menu-mobile-l2-item
+                            {%- if childLinkL2.child_active or childLinkL2.current or childLinkL2.active %}
+                              active
+                            {% endif %}
+                          "
+                        >
+                          {% if childLinkL2.links == blank %}
+                            <a
+                              href="{{ childLinkL2.url }}"
+                              id="mega-menu-mobile-l2-title-{{ linkL1.handle }}-{{ childLinkL2.handle }}"
+                              {% if childLinkL2.current %}
+                                aria-current="page"
+                              {% endif %}
+                            >
+                              <span>{{ childLinkL2.title | escape }}</span>
+                            </a>
+                          {% else %}
+                            <details class="mega-menu-mobile-l2-details">
+                              <summary>
+                                <span>{{ childLinkL2.title | escape }}</span>
+                                <span class="caret-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                              </summary>
+
+                              {% comment %} Mega Menu L3 {% endcomment %}
+                              <div class="mega-menu-mobile-l3-wrapper">
+                                <ul class="mega-menu-mobile-l3" role="menu">
+                                  {% for subChildLinkL3 in childLinkL2.links %}
+                                    <li
+                                      class="
+                                        mega-menu-mobile-l3-item
+                                        {% if subChildLinkL3.current or subChildLinkL3.active %}
+                                          active
+                                        {% endif %}
+                                      "
+                                      id="mega-menu-mobile-l3-title-{{ linkL1.handle }}-{{ childLinkL2.handle }}-{{ subChildLinkL3.handle }}"
+                                    >
+                                      <a
+                                        href="{{ subChildLinkL3.url   }}"
+                                        {% if subChildLinkL3.current %}
+                                          aria-current="page"
+                                        {% endif %}
+                                      >
+                                        {{ subChildLinkL3.title | escape }}
+                                      </a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              </div>
+                            </details>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </details>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+{% endif %}
