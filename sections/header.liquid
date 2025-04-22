@@ -9,7 +9,7 @@
 <div class="jmd-header-wrapper" data-section-id="{{ section.id }}">
   <header class="jmd-section jmd-main-header">
     <div class="jmd-logo">
-      <a href="">
+      <a href="{{ shop.url }}">
         {% comment %}theme-check-disable RemoteAsset{% endcomment %}
         <img
           class="jmd-logo-img"
@@ -49,6 +49,7 @@
         </div>
       </div>
 
+      {% comment %} CART BUTTON / ACCOUNT LINKS IF ENABLED {% endcomment %}
       {% if shop.customer_accounts_enabled %}
         {% if customer %}
           <div class="jmd-header-avatar">
@@ -173,6 +174,11 @@
   "blocks": [
     {
       "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
     }
   ]
 }
