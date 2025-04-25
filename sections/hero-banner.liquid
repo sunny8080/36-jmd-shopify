@@ -1,0 +1,301 @@
+<link href="{{ 'component-hero-banner.scss.css' | asset_url }}" rel="stylesheet">
+
+{% assign banner_height = 300 %}
+{% case section.settings.bg_height %}
+  {% when 'small' %}
+    {% assign banner_height = 300 %}
+  {% when 'medium' %}
+    {% assign banner_height = 400 %}
+  {% when 'large' %}
+    {% assign banner_height = 500 %}
+  {% else %}
+    {% assign banner_height = 300 %}
+{% endcase %}
+
+{% style %}
+  #hero-banner-{{section.id}}.jmd-section.hero-banner::after{
+    opacity: {{  section.settings.overlay_opacity |  divided_by: 100.0  }};
+  }
+  #hero-banner-{{section.id}}.jmd-section.hero-banner{
+    height: {{  banner_height }}px;
+  }
+{% endstyle %}
+
+<div
+  id="hero-banner-{{ section.id }}"
+  class="jmd-section hero-banner"
+>
+  {% if section.settings.bg_img != blank %}
+    <img
+      class="hero-banner__img"
+      src="{{  section.settings.bg_img | image_url  }}"
+      alt="hero image"
+      width="100%"
+      height="100%"
+    >
+  {% else %}
+    <img class="hero-banner__img" src="{{  "jmd-logo.png" |  asset_url  }}" alt="hero image" width="100%" height="100%">
+  {% endif %}
+
+  <div class="hero-banner__content-wrapper hero-banner__content--{{ section.settings.desktop_content_position }}">
+    <div class="hero-banner__main-content hero-banner__main-content--{{ section.settings.content_layout }}">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'short-desc' %}
+            <div class="hero-banner__item short-desc">
+              <p>{{ block.settings.short_desc }}</p>
+            </div>
+          {% when 'heading' %}
+            <div class="hero-banner__item heading {{ block.settings.heading_size }} ">
+              <h2>{{ block.settings.heading }}</h2>
+            </div>
+          {% when 'cta-button' %}
+            {% if block.settings.label != blank %}
+              <div class="hero-banner__item cta-btn">
+                <div class="jmd-btn-{{ block.settings.btn_type }}">
+                  <a
+                    {% if block.settings.btn_link != blank %}
+                      href="{{- block.settings.btn_link -}}"
+                    {% else %}
+                      role="link" aria-disabled="true"
+                    {% endif %}
+                  >
+                    {{- block.settings.label -}}
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "hero-banner",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "bg_height",
+      "label": "Background Height",
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Desktop Position",
+      "default": "middle-center",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top Left"
+        },
+        {
+          "value": "top-center",
+          "label": "Top Center"
+        },
+        {
+          "value": "top-right",
+          "label": "Top Right"
+        },
+        {
+          "value": "middle-left",
+          "label": "Middle Left"
+        },
+        {
+          "value": "middle-center",
+          "label": "Middle Center"
+        },
+        {
+          "value": "middle-right",
+          "label": "Middle Right"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "bottom-center",
+          "label": "Bottom Center"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_layout",
+      "label": "Content Layout",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "short-desc",
+      "name": "Short Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "short_desc",
+          "label": "Short Description",
+          "default": "Give customers details about the banner image(s) or content on the template."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Browse our latest products"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading Size",
+          "default": "h2",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "cta-button",
+      "name": "CTA Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop All",
+          "info": "Leave blank to hide",
+          "placeholder": "Enter button label"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Link",
+          "default": "/collections/all",
+          "info": "Search or paste link"
+        },
+        {
+          "type": "select",
+          "id": "btn_type",
+          "label": "Button Type",
+          "default": "primary",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "blocks": [
+        {
+          "type": "short-desc"
+        },
+        {
+          "type": "heading"
+        },
+        {
+          "type": "cta-button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

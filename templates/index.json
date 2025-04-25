@@ -1,10 +1,30 @@
 {
   "sections": {
-    "main": {
-      "type": "main-index",
+    "hero_banner": {
+      "type": "hero-banner",
+      "blocks": {
+        "short-desc": {
+          "type": "short-desc",
+          "settings": {}
+        },
+        "heading": {
+          "type": "heading",
+        },
+        "cta-button": {
+          "type": "cta-button",
+        }
+      },
+      "block_order": [
+        "short-desc",
+        "heading",
+        "cta-button"
+      ],
+      "settings": {
+        "overlay_opacity": 60
+      }
     }
   },
   "order": [
-    "main"
+    "hero_banner"
   ]
 }
