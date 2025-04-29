@@ -5,13 +5,20 @@
       "blocks": {
         "short-desc": {
           "type": "short-desc",
-          "settings": {}
+          "settings": {
+            "short_desc": "Your trusted neighborhood ration store offering quality groceries, daily essentials, and household items at affordable prices — all under one roof."
+          }
         },
         "heading": {
           "type": "heading",
         },
         "cta-button": {
           "type": "cta-button",
+          "settings": {
+            "label": "Shop All",
+            "btn_link": "shopify://collections/all",
+            "btn_type": "primary"
+          }
         }
       },
       "block_order": [
@@ -22,9 +29,14 @@
       "settings": {
         "overlay_opacity": 60
       }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {}
     }
   },
   "order": [
-    "hero_banner"
+    "hero_banner",
+    "featured-collection"
   ]
 }

@@ -1,0 +1,85 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - product: {Object} Product Liquid Object ()
+  - section_id: {String} (Optional)
+  - key: {Number} unique key for each product (Optional)
+  - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'jmd-logo.png' (optional)
+
+
+  Usage:
+  {% render 'product-card' %}
+{% endcomment %}
+<link href="{{ 'component-product-card.scss.css' | asset_url }}" rel="stylesheet">
+{% if product and product != empty %}
+  <div class="jmd-product-card" id="card-{{section_id}}-{{key}}">
+    <div class="jmd-product-card-content">
+      <div class="jmd-product-card__image">
+        {% if product.featured_image != blank %}
+          <img
+            src="{{ product.featured_image |  image_url  }}"
+            class="card-product-image"
+            width="100%"
+            height="100%"
+            alt="{{  product_product.featured_image.alt  }}"
+          >
+        {% elsif placeholder_image != blank %}
+          <img
+            src="{{ placeholder_image |  asset_url  }}"
+            class="card-product-image"
+            width="100%"
+            height="100%"
+            alt="product image"
+          >
+        {% else %}
+          <img
+            src="{{ 'jmd-product-placeholder.png' |  asset_url  }}"
+            class="card-product-image"
+            width="100%"
+            height="100%"
+            alt="product image"
+          >
+        {% endif %}
+      </div>
+
+      <div class="jmd-product-card-details">
+        <div>
+          <h3 class="jmd-product-card-details__title">
+            <a
+              href="{{ product.url }}"
+              id="cardlink-{{ section_id }}-{{ product.id }}"
+            >
+              {{ product.title | slice: 0, 50 | escape }}
+            </a>
+          </h3>
+        </div>
+        <div class="jmd-product-card-details-2">
+          <p class="jmd-product-card-details__vendor">{{ product.vendor }}</p>
+          <div class="jmd-product-card-details__price">
+            <span class="sell-price">{{ product.price | money_with_currency }}</span>
+            <span class="original-price">
+              <s>{{ product.compare_at_price | money_without_currency }}</s>
+            </span>
+          </div>
+
+          <div>
+            <button
+              class="jmd-blue-btn product-atc-btn"
+              {% if product.available == false %}
+                disabled
+                aria-disabled="true"
+              {% endif %}
+            >
+              {% if product.available == false %}
+                Out of Stock
+              {% else %}
+                Add To Cart
+              {% endif %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

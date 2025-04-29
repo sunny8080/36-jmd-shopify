@@ -49,21 +49,57 @@
   }
 }
 
-.h1 {
+.jmd-h1, .h1 {
   font-size: 4rem;
 }
-.h2 {
+.jmd-h2, .h2 {
   font-size: 3rem;
 }
-.h3 {
+.jmd-h3, .h3 {
   font-size: 2rem;
 }
-.h4 {
+.jmd-h4, .h4 {
   font-size: 1rem;
 }
-.h5 {
+.jmd-h5, .h5 {
   font-size: 0.875rem;
 }
-.h6 {
+.jmd-h6, .h6 {
   font-size: 0.625rem;
+}
+
+
+.jmd-blue-btn {
+  background-color: #39afd6;
+  color: #ebf7fb;
+  padding: 8px 16px;
+  display: block;
+  font-size: 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  user-select: none;
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.2s;
+
+  &:hover {
+    background-color: #287a96;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(2px);
+  }
+
+  &:focus {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 }

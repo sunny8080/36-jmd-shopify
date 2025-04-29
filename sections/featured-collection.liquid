@@ -1,0 +1,149 @@
+<link href="{{ 'section-featured-collection.scss.css' | asset_url }}" rel="stylesheet">
+{% comment %}
+  <div>
+    {{ section.settings.collection.products | json }}
+  </div>
+{% endcomment %}
+
+<div
+  id="featured-collection-{{ section.id }}"
+  class="jmd-section section-featured-collection"
+>
+  <div class="featured-collection-content-wrapper">
+    <div>
+      <h2 class="jmd-{{section.settings.heading_size}}">{{ section.settings.heading }}</h2>
+
+      {% if section.settings.description != blank
+        or section.settings.show_collection_description
+        and section.settings.collection.description != empty
+      %}
+        {% if section.settings.show_collection_description %}
+          <div class="featured-collection-desc">{{ section.settings.collection.description }}</div>
+        {% else %}
+          <div class="featured-collection-desc">{{ section.settings.description }}</div>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="featured-collection-products-wrapper">
+      {% if section.settings.collection == blank or section.settings.collection.products.size == 0 %}
+        <div class="featured-collection-no-product-found">
+          <p>Oops! Our collection is currently empty.</p>
+          <p>We're updating our products. Please check back soon!</p>
+        </div>
+      {% else %}
+        <ul class="featured-collection-products">
+          {% for product in section.settings.collection.products limit: section.settings.cnt_product_to_show %}
+            <li class="featured-collection-products-item">
+              {% render 'product-card', product: product, section_id: section.id, key: forloop.index %}
+            </li>
+          {% endfor %}
+        </ul>
+
+        {% if section.settings.show_browse_all_btn %}
+          <div class="featured-collection-show-all">
+            <a
+              href="{{ section.settings.collection.url }}"
+              class="jmd-blue-btn featured-show-all__btn"
+              aria-label="show all"
+            >
+              Browse All Featured Products
+            </a>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "cnt_product_to_show",
+      "label": "No of Products to show",
+      "default": 6,
+      "min": 2,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Handpicked <b>essentials</b> just for you — explore our top-selling and most-loved items.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show Collection Description",
+      "default": false,
+      "info": "Do you want to show featured collection description ?"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_browse_all_btn",
+      "label": "Show Browse All btn",
+      "default": true
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}
