@@ -1,0 +1,101 @@
+<link href="{{ 'section-list-collections.scss.css' | asset_url }}" rel="stylesheet">
+
+{% liquid
+  assign paginate_by = 1
+%}
+
+{% comment %}
+  case section.settings.sort_by
+    when 'products_cnt_asc', 'products_cnt_desc'
+      assign collections = collections | sort: 'all_products_count'
+    when 'published_otn', 'published_nto'
+      assign collections = collections | sort: 'published_at'
+  endcase
+
+  if section.settings.sort_by == 'alphabetical_reversed' or section.settings.sort_by == 'published_nto' or section.settings.sort_by == 'products_cnt_desc'
+    assign collections = collections | reverse
+  endif
+{% endcomment %}
+
+<div
+  id="collection-list-{{ section.id }}"
+  class="jmd-section section-list-collections"
+>
+  <div class="collection-list-wrapper">
+    <h1 class="collection-list-title">{{ section.settings.heading }}</h1>
+
+    {% if collections.size > 0 %}
+      <div class="collection-list-container">
+        {% paginate collections by paginate_by %}
+          <ul class="jmd-collection-list" role="list">
+            {% for collection in collections %}
+              <li class="jmd-collection-list-item">
+                {% render 'collection-card', collection: collection %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {% endpaginate %}
+      </div>
+    {% else %}
+      <div class="collection-list-nrf">
+        <p>Currently, there are no collections to display.</p>
+        <p>Our collections will be available soon — stay tuned!</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Collections"
+    },
+    {
+      "type": "select",
+      "id": "sort_by",
+      "label": "Sort Collections by",
+      "default": "alphabetical",
+      "options": [
+        {
+          "value": "alphabetical",
+          "label": "Alphabetical (A-Z)"
+        },
+        {
+          "value": "alphabetical_reversed",
+          "label": "Reverse Alphabetical (Z-A)"
+        },
+        {
+          "value": "published_otn",
+          "label": "Published Date (Old to New)"
+        },
+        {
+          "value": "published_nto",
+          "label": "Published Date (New to Old)"
+        },
+        {
+          "value": "products_cnt_asc",
+          "label": "Product Count Ascending"
+        },
+        {
+          "value": "products_cnt_desc",
+          "label": "Product Count Descending"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List"
+    }
+  ]
+}
+{% endschema %}

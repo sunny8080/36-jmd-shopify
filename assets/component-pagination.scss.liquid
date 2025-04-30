@@ -1,0 +1,35 @@
+.jmd-pagination-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.jmd-pagination-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+
+  .jmd-pagination-item {
+    border: 2px solid blue;
+    border-radius: 4px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .prev-btn,
+  .next-btn {
+    display: inline-block;
+    width: 25px;
+  }
+
+  .prev-btn {
+    transform: rotate(90deg);
+  }
+
+  .next-btn {
+    transform: rotate(-90deg);
+  }
+}

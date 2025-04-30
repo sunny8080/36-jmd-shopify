@@ -1,0 +1,46 @@
+.section-list-collections {
+  margin-top: 3rem;
+}
+
+.collection-list-title {
+  font-size: 2rem;
+}
+
+.collection-list-nrf {
+  margin-top: 1rem;
+  text-align: center;
+  color: grey;
+  font-size: 16px;
+}
+
+.jmd-collection-list {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 4rem 1rem;
+
+  .jmd-collection-list-item {
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+
+    @media screen and (min-width: 500px) {
+      width: calc((100% - 1rem * 1) / 2);
+      max-width: calc((100% - 1rem * 1) / 2);
+    }
+
+    @media screen and (min-width: 700px) {
+      width: calc((100% - 1rem * 2) / 3);
+      max-width: calc((100% - 1rem * 2) / 3);
+    }
+
+    @media screen and (min-width: 1024px) {
+      width: calc((100% - 1rem * 3) / 4);
+      max-width: calc((100% - 1rem * 3) / 4);
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - collection: {Object} Product Liquid Object ()
+
+  Usage:
+  {% render 'collection-card' %}
+{% endcomment %}
+<link href="{{ 'component-collection-card.scss.css' | asset_url }}" rel="stylesheet">
+
+{% liquid
+  assign collection_image = collection.featured_image
+
+  if collection_image == blank and collection.products.size > 0 and collection.products.first.featured_image != blank
+    assign collection_image = collection.products.first.featured_image
+  endif
+%}
+
+<div class="jmd-collection-card">
+  <div class="jmd-collection-card__image">
+    <a href="{{ collection.url }}" role="link">
+      {% if collection_image != blank %}
+        <img
+          src="{{ collection_image |  image_url  }}"
+          class="collection-card-image"
+          width="100%"
+          height="100%"
+          alt="{{  collection_image.alt  }}"
+        >
+      {% else %}
+        <img
+          src="{{ 'jmd-collection-placeholder.png' |  asset_url  }}"
+          class="collection-card-image"
+          width="100%"
+          height="100%"
+          alt="collection image"
+        >
+      {% endif %}
+    </a>
+  </div>
+
+  <div class="jmd-collection-card-content">
+    <div class="jmd-collection-card__title-container">
+      <h3>
+        <a href="{{ collection.url }}" role="link" class="jmd-blue-btn jmd-collection-card__title">
+          <span class="collection-title">
+            {{ collection.title | escape }}
+          </span>
+
+          <span class="jmd-arrow-icon">
+            {{- 'icon-right-arrow.svg' | inline_asset_content -}}
+          </span>
+        </a>
+      </h3>
+    </div>
+
+    <div class="jmd-collection-card__description">
+      <p>{{ collection.description | strip_html | truncatewords: 15 }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+{% comment %}
+  Renders a set of links for paginated results. Must be used within paginate tags.
+
+  Usage:
+  {% paginate results by 2 %}
+    {% render 'pagination', paginate: paginate, anchor: '#yourID' %}
+  {% endpaginate %}
+
+  Accepts:
+  - paginate: {Object} Pagination paginate object
+  - anchor: {String} (optional) This can be added so that on page reload it takes you to wherever you've placed your anchor tag.
+{% endcomment %}
+
+<link href="{{ 'component-pagination.scss.css' | asset_url }}" rel="stylesheet">
+
+{% if paginate.parts.size > 0 %}
+  <div class="jmd-pagination-wrapper" data-page="{{ paginate.current_page }}" data-total-page="{{ paginate.pages }}">
+    <nav class="jmd-pagination">
+      <ul class="jmd-pagination-list">
+        {% if paginate.previous %}
+          <li>
+            <a
+              href="{{ paginate.previous.url }}{{ anchor }}"
+              class="jmd-pagination-item"
+              aria-label="previous"
+              title="previous"
+              role="link"
+            >
+              <span class="prev-btn">
+                {{ 'icon-down-caret.svg' | inline_asset_content }}
+              </span>
+            </a>
+          </li>
+        {% endif %}
+
+        {% if paginate.next %}
+          <li>
+            <a
+              href="{{ paginate.next.url }}{{ anchor }}"
+              class="jmd-pagination-item"
+              aria-label="next"
+              title="next"
+              role="link"
+            >
+              <span class="next-btn">
+                {{ 'icon-down-caret.svg' | inline_asset_content }}
+              </span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+{% endif %}
