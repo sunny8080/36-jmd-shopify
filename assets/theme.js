@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // All functions related to DOM manipulaiton will go here
   let headerWrapper = document.querySelector('.jmd-header-wrapper');
 
   function updateHeaderPosition() {
@@ -18,13 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
       megaMenuContainer.classList.toggle('menu-open');
       let isExpanded = megaMenuContainer.getAttribute('aria-expanded') == 'true';
       megaMenuContainer.setAttribute('aria-expanded', String(!isExpanded));
-      
-      if (megaMenuContainer.classList.contains('menu-open')){
+
+      if (megaMenuContainer.classList.contains('menu-open')) {
         document.body.style.overflow = "hidden";
         // document.body.style.paddingRight = "14px";
-      }else{
+      } else {
         document.body.style.overflow = "auto";
-        megaMenuContainer.querySelectorAll('details').forEach((ele)=>{
+        megaMenuContainer.querySelectorAll('details').forEach((ele) => {
           ele.removeAttribute('open');
         })
         // document.body.style.paddingRight = "0";
@@ -32,3 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// other function except DOM manipulation will go here
+
+/**
+ * Debounce function: delays execution of the given function
+ * until after the specified wait time has passed since the
+ * last time the function was invoked.
+ *
+ * @param {Function} fn - The function to debounce.
+ * @param {number} delay - The time in milliseconds to wait.
+ * @returns {Function} - A debounced version of the function.
+ */
+function debounce(fn, delay) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), delay);
+  };
+}

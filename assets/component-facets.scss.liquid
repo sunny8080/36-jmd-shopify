@@ -1,0 +1,324 @@
+.jmd-facets__heading {
+  font-size: 1.2rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 4px;
+
+  span.facets__icon {
+    width: 1.2rem;
+  }
+
+  span.text-2 {
+    display: none;
+  }
+
+  // We will show mobile facets on less than 800px
+  @media screen and (max-width: 800px) {
+    span.text-1 {
+      display: none;
+    }
+    span.text-2 {
+      display: block;
+    }
+  }
+}
+
+.jmd-facets-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.facet-filter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  order: 2;
+}
+
+details.facet-item-details {
+  position: relative;
+
+  summary.facet-item-summary {
+    display: block;
+
+    .facet-item-header {
+      user-select: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 1rem;
+      color: #000;
+      border-radius: 4px 4px 0 0;
+    }
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .facet-item-icon {
+      width: 1rem;
+      transition: transform 0.2s ease-out;
+    }
+  }
+
+  &[open] > summary .facet-item-icon {
+    transform: rotate(180deg);
+  }
+
+  &[open] > summary .facet-item-header {
+    background: #deb887;
+    color: #000;
+  }
+
+  &[open] > .facet-item-content {
+    opacity: 1;
+  }
+
+  .facet-item-content {
+    box-sizing: border-box;
+    z-index: 999;
+    box-shadow: 8px 10px 8px -5px rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 100%;
+    background: #deb887;
+    color: #000;
+    left: 0%;
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px 0rem;
+    align-items: start;
+    width: 350px;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+
+    .face-item-content-header {
+      padding: 1rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      border-bottom: 1px solid grey;
+      padding-bottom: 16px;
+    }
+
+    .facets__reset-btn {
+      color: darkred;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      &:hover {
+        text-decoration-thickness: 2px;
+      }
+    }
+  }
+}
+
+.facet-item-filter {
+  width: 100%;
+  padding: 1rem;
+
+  .facet-item-options-wrapper {
+    max-height: 350px;
+    overflow: auto;
+  }
+
+  .facet-item-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .facet-item-option {
+    label {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      align-items: center;
+
+      &:hover .option-label {
+        text-decoration: underline;
+      }
+    }
+    .option-cnt {
+      font-weight: 500;
+    }
+
+    .facet-checkbox {
+      display: none;
+    }
+    .facet-custom-checkbox {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background: #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.1s ease;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid #1d586b;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        background: transparent;
+        display: none;
+      }
+    }
+
+    .facet-checkbox:checked + .facet-custom-checkbox {
+      background: #74c7e2;
+      &::after {
+        display: block;
+      }
+    }
+  }
+}
+
+.facet-price-range-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 6px;
+
+  .facets-space-separator {
+    margin: 0 8px;
+  }
+}
+
+.facets-input-container {
+  position: relative;
+
+  .facet-input {
+    padding: 24px 16px 8px 16px;
+    width: 100%;
+    appearance: none;
+    border: none;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+    box-shadow: 0 0 0 1px #000;
+    border-radius: 2px;
+    font-size: 16px;
+    line-height: 16px;
+    height: 50px;
+
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      -webkit-appearance: none;
+      margin: 0;
+      -moz-appearance: textfield;
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #000;
+    }
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+
+  .facet-input-label {
+    position: absolute;
+    left: 1rem;
+    top: 17px;
+    transition:
+      top 0.1s ease,
+      font-size 0.1s ease;
+    font-size: 16px;
+    line-height: 16px;
+  }
+
+  .facet-input:focus ~ .facet-input-label,
+  .facet-input:not(:placeholder-shown) ~ .facet-input-label {
+    font-size: 10px;
+    line-height: 10px;
+    top: 12px;
+  }
+}
+
+.facets-active-filter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  order: 4;
+
+  .facets-active-pill {
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    padding: 0 10px;
+    gap: 4px;
+  }
+  .close-icon-svg-wrapper {
+    width: 16px;
+  }
+  & .facets-remove-all-btn:only-child {
+    display: none;
+  }
+
+  .facets-remove-all-btn {
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+}
+.facets-sorting-product-cnt-container {
+  order: 3;
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+.facets-sorting-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+
+  .facets-select-input {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: border 200ms ease;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      border: 2px solid rgba(0, 0, 0, 0.5);
+      outline: none;
+    }
+  }
+}
+
+.facets-product-count-container {
+}

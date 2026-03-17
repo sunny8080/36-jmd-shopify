@@ -1,0 +1,322 @@
+{% comment %}
+  Renders facets (filtering and sorting)
+
+  Accepts:
+  - collection: {Object} Collection or Search object
+  - show_filters: {Boolean} Show filtering when true
+  - show_sorting: {Boolean} Show sorting when true
+  - filter_type: {String} Type of filter - horizontal/vertical
+  - cnt_visible_options_vertical_filter: {Number}
+
+  Usage:
+  {% render 'facets', collection: collection, show_filters: true, show_sorting: true, filter_type: 'horizontal' %}
+{% endcomment %}
+
+<link href="{{ 'component-facets.scss.css' | asset_url }}" rel="stylesheet">
+<script src="{{ 'cmp-FacetFiltersSortForm.js' |  asset_url }}" defer></script>
+
+<div class="jmd-facets-wrapper">
+  <facet-filters-sort-form>
+    <form
+      id=""
+      class="facets-form"
+    >
+      {% comment %} TODO - For search page {% endcomment %}
+      {% if collection.terms %}
+        <input type="hidden" name="q" value="{{ results.terms |  escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+      {% endif %}
+
+      {% if show_filters and collection.filters %}
+        <div class="jmd-facets-content">
+          <div class="jmd-facets__heading-container">
+            <h2 class="jmd-facets__heading" tabindex="-1">
+              <span class="facets__icon">
+                {{ 'icon-filters.svg' | inline_asset_content }}
+              </span>
+              <span class="facets__text text-1">Filters :</span>
+              <span class="facets__text text-2">Filter and Sort</span>
+            </h2>
+          </div>
+
+          {% comment %} show filters {% endcomment %}
+          <div class="facet-filter-container">
+            {% for filter in collection.filters %}
+              {% case filter.type %}
+                {% when 'boolean', 'list' %}
+                  <details
+                    id="deatils-{{filter.param_name |  escape}}-{{ section.id }}"
+                    data-index="{{ forloop.index }}"
+                    class="facet-item-details"
+                  >
+                    <summary
+                      class="facet-item-summary"
+                      aria-label="{{ filter.label |  escape }} ({{ filter.active_values.size }} Selected)"
+                    >
+                      <div class="facet-item-header">
+                        <span>
+                          {{- filter.label | escape }}
+
+                          {% if filter_type == 'vertical' and filter.active_values.size == 0 %}
+                            <span class="facets-item-selected %}">({{ filter.active_values.size }})</span>
+                          {% endif %}
+                        </span>
+
+                        {% if filter_type == 'vertical' and filter.operator == 'AND' %}
+                          <span class="facets__and-subtext">Match all</span>
+                        {% endif %}
+
+                        <span class="facet-item-icon">{{ 'icon-down-arrow.svg' | inline_asset_content }}</span>
+                      </div>
+                    </summary>
+
+                    <div class="facet-item-content">
+                      {% if filter_type == 'horizontal' %}
+                        <div class="face-item-content-header">
+                          <p>
+                            <span>{{ filter.active_values.size }} Selected</span>
+                            {% if filter.operator == 'AND' %}
+                              <span class="facets__and-subtext">Match all</span>
+                            {% endif %}
+                          </p>
+
+                          <a class="facets__reset-btn" role="button" href="{{ filter.url_to_remove }}">Reset</a>
+                        </div>
+                      {% endif %}
+
+                      <div class="facet-item-filter">
+                        <fieldset class="facet-item-options-wrapper">
+                          <legend class="sr-only">{{ filter.label | escape }}</legend>
+
+                          {% liquid
+                            assign sorted_filter_values = filter.values
+
+                            # Keep the selected values grouped together when operator is AND
+
+                            if filter.operator == 'AND'
+                              assign active_filter_values = filter.values | where: 'active', true
+                              assign inactive_filter_values = filter.values | where: 'active', false
+                              assign sorted_filter_values = active_filter_values | concat: inactive_filter_values
+                            endif
+                          %}
+
+                          <ul class="facet-item-options-container" role="list">
+                            {% for filter_value in sorted_filter_values %}
+                              {% assign is_disabled = false %}
+                              {% if filter_value.count == 0 and filter_value.active == false %}
+                                {% assign is_disabled = true %}
+                              {% endif %}
+
+                              <li
+                                class="
+                                  facet-item-option
+                                  {% if is_disabled  %}
+                                    disabled
+                                  {% endif %}
+                                  {% if filter_value.active %}
+                                    active
+                                  {% endif %}
+                                  {% if forloop.index > cnt_visible_options_vertical_filter and filter_type == 'vertical' %}
+                                    show-more-item hidden
+                                  {% endif %}
+                                "
+                              >
+                                {% if filter.presentation == 'text' %}
+                                  <label
+                                    class=""
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      class="facet-checkbox"
+                                      id="filter-{{filter.param_name |  escape}}-{{ forloop.index }}"
+                                      name="{{ filter_value.param_name }}"
+                                      value="{{ filter_value.value }}"
+                                      {% if filter_value.active %}
+                                        checked
+                                      {% endif %}
+                                      {% if filter_value.count == 0 and filter_value.count == 0 %}
+                                        disabled
+                                      {% endif %}
+                                    >
+
+                                    <span class="facet-custom-checkbox"></span>
+
+                                    <span>
+                                      <span class="option-label">{{ filter_value.label }}</span>
+                                      (<span class="option-cnt">{{ filter_value.count }}</span>)
+                                    </span>
+
+                                    <span class="sr-only">
+                                      {{ filter_value.label | escape }}
+                                      - ( {{ filter_value.count }} product(s) )
+                                    </span>
+                                  </label>
+                                {% else %}
+                                  {% comment %} TODO - check for other type of filter presentation {% endcomment %}
+                                {% endif %}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </fieldset>
+
+                        {% if filter.values.size > cnt_visible_options_vertical_filter and filter_type == 'vertical' %}
+                          {% comment %} TODO - how to achieve show more functionality {% endcomment %}
+                          <button class="facets-vertical-show-more-btn">
+                            <span class="show-more"> + Show more </span>
+                            <span class="show-less"> - Show less </span>
+                          </button>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </details>
+
+                {% when 'price_range' %}
+                  <details
+                    id="deatils-{{filter.param_name |  escape}}-{{ section.id }}"
+                    data-index="{{ forloop.index }}"
+                    class="facet-item-details"
+                  >
+                    <summary class="facet-item-summary">
+                      <div class="facet-item-header">
+                        <span>{{ filter.label | escape }}</span>
+                        <span class="facet-item-icon">{{ 'icon-down-arrow.svg' | inline_asset_content }}</span>
+                      </div>
+                    </summary>
+
+                    <div class="facet-item-content">
+                      <div class="face-item-content-header">
+                        <p>The highest price is: {{ filter.range_max | money | strip_html | escape }}</p>
+
+                        <a class="facets__reset-btn" role="button" href="{{ filter.url_to_remove }}">Reset</a>
+                      </div>
+
+                      <div class="facet-item-filter facet-price-range-container">
+                        <p>{{ cart.currency.symbol }}</p>
+                        <div class="facets-input-container">
+                          <input
+                            type="number"
+                            name="{{ filter.min_value.param_name }}"
+                            class="facet-input"
+                            id="filter-{{ filter.label |  escape }}-GTE"
+                            placeholder="0"
+                            min="0"
+                            inputmode="decimal"
+                            {% if filter.min_value %}
+                              value="{{ filter.min_value |  money_without_currency }}"
+                            {% endif %}
+                          >
+                          <label class="facet-input-label" for="filter-{{ filter.label |  escape }}-GTE">From</label>
+                        </div>
+
+                        <span class="facets-space-separator">-</span>
+
+                        <div class="facets-input-container">
+                          <input
+                            type="number"
+                            name="{{ filter.max_value.param_name }}"
+                            class="facet-input"
+                            id="filter-{{ filter.label |  escape }}-LTE"
+                            placeholder="{{ filter.range_max |  money_without_currency }}"
+                            min="0"
+                            inputmode="decimal"
+                            {% if filter.max_value %}
+                              value="{{ filter.max_value |  money_without_currency }}"
+                            {% endif %}
+                          >
+                          <label class="facet-input-label" for="filter-{{ filter.label |  escape }}-LTE">To</label>
+                        </div>
+                      </div>
+                    </div>
+                  </details>
+              {% endcase %}
+            {% endfor %}
+          </div>
+
+          {% comment %} Show active filter pills {% endcomment %}
+          <div class="facets-active-filter-container">
+            {% for filter in collection.filters %}
+              {% if filter.type == 'price_range' %}
+                {% if filter.min_value.value != null or filter.max_value.value != null %}
+                  <a
+                    href="{{ filter.url_to_remove }}"
+                    class="facets-active-pill"
+                  >
+                    <span>{{ filter.min_value.value | default: 0 | money }}</span>
+                    <span>-</span>
+                    <span>{{ filter.max_value.value | default: filter.range_max | money }}</span>
+                    <span class="close-icon-svg-wrapper">
+                      {{ 'icon-close-small.svg' | inline_asset_content }}
+                    </span>
+                    <span class="sr-only">Remove filter</span>
+                  </a>
+                {% endif %}
+              {% else %}
+                {% for active_value in filter.active_values %}
+                  <a
+                    href="{{ active_value.url_to_remove }}"
+                    class="facets-active-pill"
+                  >
+                    <span>{{ filter.label | escape }}: {{ active_value.label | escape }}</span>
+                    <span class="close-icon-svg-wrapper">
+                      {{ 'icon-close-small.svg' | inline_asset_content }}
+                    </span>
+                    <span class="sr-only">Remove filter</span>
+                  </a>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+
+            <a
+              href="{{ collection.url }}"
+              class="facets-remove-all-btn"
+            >
+              <span>Remove all</span>
+              <span class="sr-only">Remove all filters</span>
+            </a>
+          </div>
+
+          <div class="facets-sorting-product-cnt-container">
+            {% comment %} Facets Sorting container {% endcomment %}
+            {% if show_sorting %}
+              <div class="facets-sorting-container">
+                <h2 class="facets-sorting__heading">Sort by :</h2>
+
+                <div class="facets-sorting-options">
+                  {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                  <select
+                    class="facets-select-input"
+                    aria-describedby="a11y-refresh-page-message"
+                  >
+                    {% for option in collection.sort_options %}
+                      <option
+                        value="{{ option.value | escape }}"
+                        {% if option.value == sort_by %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ option.name | escape }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            {% endif %}
+
+            {% comment %} Show product count {% endcomment %}
+            <div class="facets-product-count-container" role="status">
+              <h2 class="facets-product-count">
+                {% if collection.results_count %}
+                  {{ collection.results_count }} product(s)
+                {% elsif collection.products_count == collection.all_products_count %}
+                  {{ collection.products_count }} product(s)
+                {% else %}
+                  {{ collection.products_count }} of {{ collection.all_products_count }} product(s)
+                {% endif %}
+              </h2>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </form>
+  </facet-filters-sort-form>
+</div>

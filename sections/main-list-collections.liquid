@@ -1,10 +1,8 @@
 <link href="{{ 'section-list-collections.scss.css' | asset_url }}" rel="stylesheet">
 
 {% liquid
-  assign paginate_by = 1
-%}
+  assign paginate_by = 10
 
-{% comment %}
   case section.settings.sort_by
     when 'products_cnt_asc', 'products_cnt_desc'
       assign collections = collections | sort: 'all_products_count'
@@ -15,7 +13,7 @@
   if section.settings.sort_by == 'alphabetical_reversed' or section.settings.sort_by == 'published_nto' or section.settings.sort_by == 'products_cnt_desc'
     assign collections = collections | reverse
   endif
-{% endcomment %}
+%}
 
 <div
   id="collection-list-{{ section.id }}"

@@ -26,7 +26,7 @@
                   id="mega-menu-l1-title-{{ link.handle }}"
                 >
                   <span>{{ link.title | escape }}</span>
-                  <span class="caret-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                  <span class="caret-icon">{{- 'icon-down-arrow.svg' | inline_asset_content -}}</span>
                 </summary>
 
                 {% comment %} Render child menus {% endcomment %}
@@ -51,7 +51,7 @@
                       >
                         <span>{{ childLink.title | escape }}</span>
                         {% if childLink.links != blank %}
-                          <span class="caret-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                          <span class="caret-icon">{{- 'icon-down-arrow.svg' | inline_asset_content -}}</span>
                         {% endif %}
                       </a>
 

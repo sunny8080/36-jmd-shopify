@@ -1,1 +1,126 @@
-<div>My collection</div>
+<link href="{{ 'section-collection.scss.css' | asset_url }}" rel="stylesheet">
+
+<div
+  id="section-collection-{{ section.id }}"
+  class="jmd-section section-collection"
+>
+  <div class="jmd-collection-wrapper">
+    <div class="jmd-collection-details">
+      <div>
+        <h1 class="jmd-collection-title">{{ collection.title | escape }}</h1>
+
+        {% if section.settings.show_description %}
+          <p class="jmd-collection-description">{{ collection.description | strip_html | escape }}</p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_collection_image and collection.image %}
+        <div class="jmd-collection-img-container">
+          <img
+            src="{{ collection.image |  image_url  }}"
+            class="jmd-collection-image"
+            width="100%"
+            height="100%"
+            alt="{{  collection.image.alt  }}"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="jmd-collection-filters-wrapper">
+      {% render 'facets',
+      collection: collection,
+      show_filters: section.settings.show_filters,
+      show_sorting: section.settings.show_sorting,
+      filter_type: 'horizontal'
+      cnt_visible_options_vertical_filter: section.settings.cnt_visible_options_vertical_filter
+      %}
+    </div>
+
+    <div class="jmd-collection-products-wrapper">
+      {% if collection.products.size == 0 %}
+        <div class="jmd-collection-products-nrf">
+          <p>Oops! No product found !!</p>
+          <p>Please remove some filters if any !</p>
+        </div>
+      {% else %}
+        <div>
+          {% paginate collection.products by section.settings.products_per_page %}
+            <ul class="jmd-collection-products">
+              {% for product in collection.products %}
+                <li class="featured-collection-products-item">
+                  {% render 'product-card', product: product, section_id: section.id, key: forloop.index %}
+                </li>
+              {% endfor %}
+            </ul>
+
+            {% render 'pagination', paginate: paginate %}
+          {% endpaginate %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Collection details are [managed in your admin](https://help.shopify.com/manual/products/collections/collection-layout)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show Collection Description (if present)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show Collection Image (if present)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Filters and Sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sorting",
+      "label": "Show Sorting",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "cnt_visible_options_vertical_filter",
+      "label": "No of options to show in vertical filter",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show Filters",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Product Grid Settings"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "default": 10
+    }
+  ]
+}
+{% endschema %}
